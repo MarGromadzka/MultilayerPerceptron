@@ -7,9 +7,8 @@ class Network:
         self.network = network
 
 
-    def forward(self, X):
+    def forward(self, input):
         activations = []
-        input = X
         for layer in self.network:
             activations.append(layer.forward(input))
             input = activations[-1]
@@ -17,9 +16,9 @@ class Network:
         return activations
 
 
-    def predict(self, X):
+    def predict(self, input):
         """ zwraca indeks największej wartości z ostatniej warstwy"""
-        results = self.forward(X)[-1]
+        results = self.forward(input)[-1]
         return np.argmax(results, axis=-1)
 
 
