@@ -22,6 +22,8 @@ class Network:
         return np.argmax(results, axis=-1)
 
 
-    def loss_function(self, X, y):
-        results = self.forward(X)[-1]
-        return (y-results)**2
+    def loss_function(self, input, y):
+        y_vector = np.zeros(len(self.network[-1].biases))
+        y_vector[y] = 1;
+        results = self.forward(input)[-1]
+        return np.sum((y_vector-results)**2)
