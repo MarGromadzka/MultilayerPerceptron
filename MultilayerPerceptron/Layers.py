@@ -4,10 +4,11 @@ class Layer:
 
     def __init__(self, input_size, output_size, first_layer=False, last_layer=False):
         self.last_layer_property = last_layer
+        self.first_layer_property = first_layer
         self.weights = np.random.uniform(-1 / np.sqrt(input_size), 1 / np.sqrt(input_size), (output_size, input_size))
         if first_layer:
             self.weights = np.ones((output_size, input_size))
-        self.biases = np.zeros(output_size)
+        self.biases = np.array([np.zeros(output_size)]).T
         self.z = None
         self.a = None
 
@@ -22,6 +23,10 @@ class Layer:
         return np.divide(1, np.add(1, np.square(x)))
 
     def forward(self, input):
-        self.z = np.dot(self.weights, input) + self.biases
-        self.a = self.activation_funtion(self.z)
+        if self.first_layer_property:
+            self.z = input
+            self.a = input
+        else:
+            self.z = np.sum([np.dot(self.weights, input), self.biases], axis=0) # TODO na pewno dobrze? bo chyba nie
+            self.a = self.activation_funtion(self.z)
         return self.a
