@@ -7,10 +7,11 @@ class Layer:
         self.first_layer_property = first_layer
         self.weights = np.random.uniform(-1 / np.sqrt(input_size), 1 / np.sqrt(input_size), (output_size, input_size))
         if first_layer:
-            self.weights = np.ones((output_size, input_size))
+            self.weights = None
         self.biases = np.array([np.zeros(output_size)]).T
         self.z = None
-        self.a = None
+        # obliczona aktywacja
+        self.activation = None
 
     def activation_funtion(self, x):
         if self.last_layer_property:
@@ -25,8 +26,8 @@ class Layer:
     def forward(self, input):
         if self.first_layer_property:
             self.z = input
-            self.a = input
+            self.activation = input
         else:
-            self.z = np.sum([np.dot(self.weights, input), self.biases], axis=0) # TODO na pewno dobrze? bo chyba nie
-            self.a = self.activation_funtion(self.z)
-        return self.a
+            self.z = np.sum([np.dot(self.weights, input), self.biases], axis=0)
+            self.activation = self.activation_funtion(self.z)
+        return self.activation
