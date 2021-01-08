@@ -20,7 +20,6 @@ class Network:
         """ zwraca indeks największej wartości z ostatniej warstwy"""
         self.forward(input)
         return np.argmax(self.network[-1].a)
-        # return self.network[-1].a
 
     def loss_function(self, results, y):
         y_vector = np.zeros(len(self.network[-1].biases))
@@ -38,17 +37,14 @@ class Network:
     def backward_propagation(self, y):
         gradient_w = [[] for i in range(len(self.network) - 1)]
         gradient_b = [[] for i in range(len(self.network) - 1)]
+        curr_layer = self.network[-1]
+        cost_z_der = curr_layer.activation_derivative(curr_layer.z) * self.loss_derivative(curr_layer.a, y)
         for layer_num in range(-1, -len(self.network), -1):
-            curr_layer = self.network[layer_num]
-            if layer_num == -1:
-                cost_z_der = curr_layer.activation_derivative(curr_layer.z) * self.loss_derivative(curr_layer.a, y)
-                gradient_w[layer_num] = np.dot(cost_z_der, np.transpose(self.network[layer_num - 1].a))
-                gradient_b[layer_num] = cost_z_der
-            else:
-                prev_layer = self.network[layer_num + 1]
-                cost_z_der = np.dot(np.transpose(prev_layer.weights), cost_z_der) * curr_layer.activation_derivative(curr_layer.z)
-                gradient_w[layer_num] = np.dot(cost_z_der, np.transpose(self.network[layer_num - 1].a))
-                gradient_b[layer_num] = cost_z_der
+            gradient_w[layer_num] = np.dot(cost_z_der, np.transpose(self.network[layer_num - 1].a))
+            gradient_b[layer_num] = cost_z_der
+            curr_layer = self.network[layer_num - 1]
+            prev_layer = self.network[layer_num]
+            cost_z_der = np.dot(np.transpose(prev_layer.weights), cost_z_der) * curr_layer.activation_derivative(curr_layer.z)
         return gradient_w, gradient_b
 
     def train_network(self, train_x, train_y, beta, epoch, epsilon, batch_size):
