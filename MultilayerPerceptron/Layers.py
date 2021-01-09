@@ -3,12 +3,21 @@ import numpy as np
 class Layer:
 
     def __init__(self, input_size, output_size, first_layer=False, last_layer=False):
+        ''' klasa przechowująca dane dotyczące pojedyńczego Layera
+        params:
+            input_size - rozmiar danych które wejdą do warstwy
+            output_size - ilość neuronów
+        default_params:
+            first_layer - konieczny podczas realizowania wymagania na przechowywanie wartości początkowych przez pierwszą warstwę sieci
+            last_layer - konieczny podczas realizowania wymagania na liniową funkcję aktywacji ostatniej warstwy
+        '''
         self.last_layer_property = last_layer
         self.first_layer_property = first_layer
         self.weights = np.random.uniform(-1 / np.sqrt(input_size), 1 / np.sqrt(input_size), (output_size, input_size))
         if first_layer:
             self.weights = None
         self.biases = np.array([np.zeros(output_size)]).T
+        #
         self.z = None
         # obliczona aktywacja
         self.activation = None
