@@ -34,6 +34,8 @@ class Network:
         y_vector = np.zeros(len(results))
         y_vector[y] = 1.0
         y_vector = np.array([y_vector]).T
+        results = results.astype(float) / (results.max() - results.min())
+        results = [max(np.zeros(1),result) for result in results]
         # TODO czy result nie powinien byc z przedzialu 0,1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return np.sum(np.subtract(results, y_vector)**2, axis=0)[0] / len(y_vector)
 
