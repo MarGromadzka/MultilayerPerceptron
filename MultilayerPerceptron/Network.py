@@ -34,9 +34,8 @@ class Network:
         y_vector = np.zeros(len(results))
         y_vector[y] = 1.0
         y_vector = np.array([y_vector]).T
-        results = results.astype(float) / (results.max() - results.min())
+        results = results.astype(float) / results.max() 
         results = [max(np.zeros(1),result) for result in results]
-        # TODO czy result nie powinien byc z przedzialu 0,1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return np.sum(np.subtract(results, y_vector)**2, axis=0)[0] / len(y_vector)
 
     def loss_derivative(self, results, y):
@@ -63,8 +62,8 @@ class Network:
         # lista w której będziemy przechowywać wyliczone gradienty
         gradient_w = [[] for i in range(len(self.network) - 1)]
         gradient_b = [[] for i in range(len(self.network) - 1)]
+        # implementacja reguły łańcuchowej
         # ostatnia warstwa - brany pod uwagę koszt liczony z funkcji straty
-        # 
         cost_z_der = self.network[-1].activation_derivative(self.network[-1].z) * self.loss_derivative(self.network[-1].activation, y)
         for layer_num in range(-1, -len(self.network), -1):
             gradient_w[layer_num] = np.dot(cost_z_der, np.transpose(self.network[layer_num - 1].activation))
@@ -112,7 +111,7 @@ class Network:
                     if (abs(new_loss - old_loss) < epsilon):
                         # print("I'm here :)")
                         return
-                    if np.isinf(new_loss):  # Overflow from line 37 TODO? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if np.isinf(new_loss): 
                         return
 
                     # print(f"Epoch: {e + 1} New loss: {new_loss}")
